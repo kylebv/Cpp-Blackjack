@@ -1,0 +1,182 @@
+/*Name: Kyle Vincent
+Course: SENG1120
+Student no.: 3166360*/
+
+#include "LinkedList.h"
+
+using namespace std;
+using namespace kyle_assignment_2;
+
+namespace kyle_assignment_2
+{
+	template <typename Item>
+	LinkedList<Item>::LinkedList()
+	{
+		head_ptr = new Node<Item>();
+		tail_ptr = head_ptr;
+		listCount = 0;
+		current = head_ptr;
+	}
+	
+	template <typename Item>
+	LinkedList<Item>::~LinkedList()
+	{
+		current = head_ptr;
+		//starting at the head, the destructor loops through each node in
+		//the LinkedList and deletes each one
+		for(int i = 0;i<=listCount&&current->get_next()!=NULL;i++)
+		{
+			head_ptr = current;
+			current = current->get_next();
+			delete head_ptr;
+		}
+		delete current;
+		delete tail_ptr;
+	}
+	
+	template <typename Item>
+	void LinkedList<Item>::list_head_insert(const Item& added_data)
+	{
+		//a temp pointer creates a new Node
+		Node<Item>* temp = new Node<Item>(added_data, head_ptr, NULL);
+		//the head's prev pointer points to the temp pointer
+		head_ptr->set_prev(temp);
+		//and the temp pointer becomes the head
+		head_ptr = temp;
+		listCount++;
+	}
+	
+	template <typename Item>
+	void LinkedList<Item>::list_insert(const Item& added_data)
+	{
+		//a temp pointer creates a new node, with next pointing to the current node
+		//and prev pointing to the left of the current node
+		Node<Item>* temp1 = new Node<Item>(added_data, current, current->get_prev());
+		//another temp pointer points at the node to the left of the current node
+		Node<Item>* temp2 = current->get_prev();
+		//the current node's prev is set to the new temp pointer
+		current->set_prev(temp1);
+		//and the second temp pointer's next is set to the new temp pointer
+		temp2->set_next(temp1);
+		listCount++;
+	}
+	
+	template <typename Item>
+	void LinkedList<Item>::list_append(const Item& added_data)
+	{
+		if(listCount==0)
+		{
+			Node<Item>* temp = new Node<Item>(added_data, NULL, NULL);
+			head_ptr = temp;
+			tail_ptr = head_ptr;
+		}
+		else
+		{
+			//a temp pointer creates a new node
+			Node<Item>* temp = new Node<Item>(added_data, NULL, tail_ptr);
+			//the tail's next pointer points to the temp pointer
+			tail_ptr->set_next(temp);
+			//and the temp pointer becomes the tail
+			tail_ptr = temp;
+		}
+		listCount++;
+	}
+	
+	template <typename Item>
+	void LinkedList<Item>::list_remove_node()
+	{
+		//the nodes either side of current are pointed to by temp pointers
+		Node<Item>* temp1 = current->get_prev();
+		Node<Item>* temp2 = current->get_next(); 
+		//and their pointers are set to each other
+		temp1->set_next(temp2);
+		temp2->set_prev(temp1);
+		//then current is deleted
+		delete current;
+		listCount--;
+	}
+	
+	template <typename Item>
+	void LinkedList<Item>::list_remove_head()
+	{
+		//a temp pointer points to the node to the right of the head
+		Node<Item>* temp = head_ptr->get_next();
+		//its prev pointer is NULLed
+		temp->set_prev(NULL);
+		//the head is deleted
+		delete head_ptr;
+		//and the temp pointer becomes the head
+		head_ptr = temp;
+		listCount--;
+	}
+	
+	template <typename Item>
+	void LinkedList<Item>::list_remove_tail()
+	{
+		//a temp pointer points to the left of the tail
+		Node<Item>* temp = tail_ptr->get_prev();
+		//it's next pointer is NULLed
+		temp->set_next(NULL);
+		//the tail is deleted
+		delete tail_ptr;
+		//and the temp pointer becomes the tail
+		tail_ptr = temp;
+		listCount--;
+	}
+
+	template <typename Item>
+	int LinkedList<Item>::list_length() const
+	{
+		return listCount;
+	}
+
+	template <typename Item>
+	void LinkedList<Item>::list_set_current(const int position)
+	{
+		if(position<=listCount)
+		{
+			current = head_ptr;
+			//starting at the head, the function sets current to the next pointer
+			//for as longs as it is not at the index 'position'
+			if(position>0)
+			{
+				for(int counter = 1;counter<=position&&current->get_next()!=NULL;counter++)
+				{
+					current = current->get_next();
+				}
+			}
+		}
+	}
+
+	template <typename Item>
+	int LinkedList<Item>::list_search(const Item& input) 
+	{
+		int position = -1;
+		current = head_ptr;
+		//starting at the head, the function gets the data of the current node and
+		//compares it to input, then moves to the next node. If they ever match,
+		//position is set to the current index
+		for (int index = 0; index <= listCount; index++)
+		{
+			Item contents = current->get_data();
+			if(input == contents)
+			{
+				position = index;
+			}
+			current = current->get_next();
+		}
+		return position;
+	}
+
+	template <typename Item>
+	Item LinkedList<Item>::list_node_get_data() const
+	{
+		return current->get_data();
+	}
+
+	template <typename Item>
+	void LinkedList<Item>::list_node_set_data(const Item& _data)
+	{
+		current->set_data(_data);
+	}
+}

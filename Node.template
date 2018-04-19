@@ -1,0 +1,69 @@
+/*Name: Kyle Vincent
+Course: SENG1120
+Student no.: 3166360*/
+
+#include "Node.h"
+
+using namespace std;
+
+namespace kyle_assignment_2
+{
+	template <typename Item>
+	Node<Item>::Node()
+	{
+		data = Item();
+		next = NULL;
+		prev = NULL;
+	}
+	
+	template <typename Item>
+	Node<Item>::~Node()
+	{
+		next = NULL;
+		prev = NULL;
+	}
+	
+	template <typename Item>
+	Node<Item>::Node(const Item& init_data,  Node*  next_node, Node* prev_node)
+	{
+		data = init_data;
+		next = next_node;
+		prev = prev_node;
+	}
+	
+	template <typename Item>
+	void Node<Item>::set_next(Node* const next_link)
+	{
+		next = next_link;
+	}
+	
+	template <typename Item>
+	void Node<Item>::set_prev(Node* const prev_link)
+	{
+		prev = prev_link;
+	}
+	
+	template <typename Item>
+	void Node<Item>::set_data(const Item& _data)
+	{
+		data = _data;
+	}
+	
+	template <typename Item>
+	Node<Item>* Node<Item>::get_next() const
+	{
+		return next;
+	}
+	
+	template <typename Item>
+	Node<Item>* Node<Item>::get_prev() const
+	{
+		return prev;
+	}
+	
+	template <typename Item>
+	Item Node<Item>::get_data() const
+	{
+		return data;
+	}
+}
